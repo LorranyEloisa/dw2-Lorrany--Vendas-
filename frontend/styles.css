@@ -5,7 +5,7 @@ body {
   margin: 0;
 }
 header {
-  background: #0EA5E9;
+  background: #112c38;
   color: #fff;
   display: flex;
   align-items: center;
@@ -67,7 +67,7 @@ header {
   margin-bottom: 0.5rem;
 }
 .card button {
-  background: #0EA5E9;
+  background: #3c6477;
   color: #fff;
   border: none;
   border-radius: 4px;

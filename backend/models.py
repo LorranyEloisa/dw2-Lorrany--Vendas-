@@ -12,6 +12,7 @@ class Produto(Base):
     estoque = Column(Integer, nullable=False)
     categoria = Column(String(40), nullable=False)
     sku = Column(String(40))
+    modelo = Column(String(60))  # Novo campo
 
 class Pedido(Base):
     __tablename__ = 'pedidos'

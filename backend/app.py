@@ -32,6 +32,7 @@ class ProdutoSchema(BaseModel):
     estoque: int = Field(..., ge=0)
     categoria: str = Field(...)
     sku: Optional[str] = None
+    modelo: Optional[str] = None
 
 class ProdutoOut(ProdutoSchema):
     id: int
@@ -154,6 +155,28 @@ app.add_middleware(
 )
 
 Base.metadata.create_all(bind=engine)
+
+# Adiciona produtos iniciais se o banco estiver vazio
+from sqlalchemy.orm import Session as Sessao
+def popular_produtos():
+    db = Sessao(bind=engine)
+    if db.query(Produto).count() == 0:
+        produtos = [
+            Produto(nome="Caderno 10 Matérias", modelo="Tilibra MaxNotes", descricao="Caderno universitário 10 matérias, 200 folhas.", preco=32.90, estoque=20, categoria="Papelaria", sku="CAD10M-TILIBRA"),
+            Produto(nome="Lápis Preto", modelo="Faber-Castell 1201", descricao="Lápis preto sextavado.", preco=1.50, estoque=100, categoria="Escrita", sku="LAPIS-FC1201"),
+            Produto(nome="Mochila Escolar", modelo="Sestini Up4You", descricao="Mochila resistente, várias cores.", preco=149.90, estoque=10, categoria="Acessórios", sku="MOCH-SESTINI"),
+            Produto(nome="Borracha Branca", modelo="Mercur BR40", descricao="Borracha macia, não mancha.", preco=2.00, estoque=60, categoria="Escrita", sku="BORR-MERCUR"),
+            Produto(nome="Caneta Azul", modelo="BIC Cristal", descricao="Caneta esferográfica azul.", preco=2.50, estoque=80, categoria="Escrita", sku="CANETA-BIC"),
+            Produto(nome="Calculadora Científica", modelo="Casio FX-82MS", descricao="Calculadora científica 240 funções.", preco=119.00, estoque=5, categoria="Eletrônicos", sku="CALC-CASIO"),
+            Produto(nome="Estojo Escolar", modelo="Tilibra Colors", descricao="Estojo grande, zíper reforçado.", preco=24.90, estoque=25, categoria="Acessórios", sku="ESTOJO-TILIBRA"),
+            Produto(nome="Régua 30cm", modelo="Trident Flex", descricao="Régua flexível 30cm.", preco=4.90, estoque=40, categoria="Papelaria", sku="REGUA-TRIDENT"),
+            Produto(nome="Apontador Duplo", modelo="Faber-Castell Duo", descricao="Apontador com depósito.", preco=5.50, estoque=50, categoria="Acessórios", sku="APONT-FC"),
+            Produto(nome="Marca Texto", modelo="Stabilo Boss", descricao="Marca texto amarelo.", preco=6.90, estoque=30, categoria="Escrita", sku="MT-STABILO"),
+        ]
+        db.add_all(produtos)
+        db.commit()
+    db.close()
+popular_produtos()
 
 @app.get("/health")
 def health():
