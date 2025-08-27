@@ -3,8 +3,8 @@ from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .database import engine, Base, SessionLocal
-from .models import Produto, Pedido
+from database import engine, Base, SessionLocal
+from models import Produto, Pedido
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
@@ -139,8 +139,8 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .database import engine, Base, SessionLocal
-from .models import Produto
+from database import engine, Base, SessionLocal
+from models import Produto
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
@@ -207,7 +207,7 @@ def listar_produtos(
     search: Optional[str] = Query(None),
     categoria: Optional[str] = Query(None),
     sort: Optional[str] = Query(None),
-    db: Session = next(get_db())
+    db: Session = Depends(get_db)
 ):
     query = db.query(Produto)
     if search:
@@ -223,7 +223,7 @@ def listar_produtos(
     return query.all()
 
 @app.post("/produtos", response_model=ProdutoOut, status_code=201)
-def criar_produto(produto: ProdutoSchema, db: Session = next(get_db())):
+def criar_produto(produto: ProdutoSchema, db: Session = Depends(get_db)):
     db_prod = Produto(**produto.dict())
     db.add(db_prod)
     db.commit()
@@ -231,7 +231,7 @@ def criar_produto(produto: ProdutoSchema, db: Session = next(get_db())):
     return db_prod
 
 @app.put("/produtos/{id}", response_model=ProdutoOut)
-def atualizar_produto(id: int, produto: ProdutoSchema, db: Session = next(get_db())):
+def atualizar_produto(id: int, produto: ProdutoSchema, db: Session = Depends(get_db)):
     db_prod = db.query(Produto).filter(Produto.id == id).first()
     if not db_prod:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
@@ -242,7 +242,7 @@ def atualizar_produto(id: int, produto: ProdutoSchema, db: Session = next(get_db
     return db_prod
 
 @app.delete("/produtos/{id}", status_code=204)
-def deletar_produto(id: int, db: Session = next(get_db())):
+def deletar_produto(id: int, db: Session = Depends(get_db)):
     db_prod = db.query(Produto).filter(Produto.id == id).first()
     if not db_prod:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
