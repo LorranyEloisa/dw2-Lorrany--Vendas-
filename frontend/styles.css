@@ -4,13 +4,6 @@ body {
   color: #111827;
   margin: 0;
 }
-
-.container {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: stretch;
-}
 header {
   background: #112c38;
   color: #fff;
@@ -46,7 +39,6 @@ header {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 2rem;
   padding: 2rem;
-  flex: 1 1 0%;
 }
 .card {
   background: #F9FAFB;
@@ -57,80 +49,9 @@ header {
   flex-direction: column;
   align-items: center;
 }
-.card img.product-img {
-  max-width: 120px;
-  max-height: 120px;
-  object-fit: contain;
+.card img {
+  max-width: 100px;
   margin-bottom: 1rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-}
-/* Carrinho lateral */
-#cart-section {
-  width: 320px;
-  min-width: 260px;
-  background: #f3f4f6;
-  border-left: 2px solid #e5e7eb;
-  padding: 1.5rem 1rem 1rem 1rem;
-  box-shadow: -2px 0 8px rgba(0,0,0,0.04);
-  position: sticky;
-  top: 80px;
-  height: fit-content;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-#cart-section h2 {
-  margin-top: 0;
-  font-size: 1.3rem;
-  color: #3c6477;
-}
-#cart-modal ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-}
-#cart-modal li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.3rem 0;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 1rem;
-}
-#cart-modal .cart-total {
-  font-weight: bold;
-  margin: 1rem 0 0.5rem 0;
-  color: #0EA5E9;
-}
-#cart-modal button {
-  background: #EF4444;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 0.2rem 0.7rem;
-  margin-left: 0.5rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-#cart-modal .cart-empty {
-  color: #888;
-  text-align: center;
-  margin: 2rem 0;
-}
-@media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-  }
-  #cart-section {
-    width: 100%;
-    min-width: unset;
-    border-left: none;
-    border-top: 2px solid #e5e7eb;
-    box-shadow: none;
-    position: static;
-    max-height: unset;
-  }
 }
 .card .name {
   font-weight: bold;
