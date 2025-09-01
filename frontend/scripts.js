@@ -7,20 +7,40 @@ async function carregarProdutos() {
 	const produtos = await res.json();
 	const lista = document.getElementById('product-list');
 	lista.innerHTML = '';
-	produtos.forEach(produto => {
+	produtos.forEach((produto, i) => {
 		const card = document.createElement('div');
 		card.className = 'card';
-		card.innerHTML = `
-			<img src="https://via.placeholder.com/100x100?text=Produto" alt="Imagem do produto">
-			<div class="name">${produto.nome}</div>
-			<div class="model">Modelo: <b>${produto.modelo || '-'}</b></div>
-			<div class="desc">${produto.descricao || ''}</div>
-			<div class="price">R$ ${produto.preco.toFixed(2)}</div>
-			<div class="stock">${produto.estoque > 0 ? 'Em estoque' : 'Esgotado'}</div>
-			<button ${produto.estoque === 0 ? 'disabled' : ''} aria-pressed="false" aria-label="Adicionar ao carrinho">Adicionar</button>
-		`;
+		   card.innerHTML = `
+			   <img src="${produto.imagem || 'https://via.placeholder.com/100x100?text=Sem+Imagem'}" alt="Imagem do produto">
+			   <div class="name">${produto.nome}</div>
+			   <div class="model">Modelo: <b>${produto.modelo || '-'}</b></div>
+			   <div class="desc">${produto.descricao || ''}</div>
+			   <div class="price">R$ ${produto.preco.toFixed(2)}</div>
+			   <div class="stock">${produto.estoque > 0 ? 'Em estoque' : 'Esgotado'}</div>
+			   <button ${produto.estoque === 0 ? 'disabled' : ''} aria-pressed="false" aria-label="Adicionar ao carrinho">Adicionar</button>
+		   `;
+		// Adiciona ao carrinho ao clicar no card ou botão
+		card.onclick = (e) => {
+			// Evita duplo clique se for no botão
+			if (e.target.tagName === 'BUTTON' || e.target === card) {
+				adicionarAoCarrinho(produto);
+				animarAdicao(card);
+			}
+		};
+		// Também adiciona ao carrinho ao clicar no botão
+		card.querySelector('button').onclick = (e) => {
+			e.stopPropagation();
+			adicionarAoCarrinho(produto);
+			animarAdicao(card);
+		};
 		lista.appendChild(card);
 	});
+}
+
+// Animação de feedback ao adicionar ao carrinho
+function animarAdicao(card) {
+	card.classList.add('added');
+	setTimeout(() => card.classList.remove('added'), 600);
 }
 
 window.addEventListener('DOMContentLoaded', carregarProdutos);
@@ -66,7 +86,7 @@ function mostrarCarrinho() {
 		modal.innerHTML = '<div class="cart-empty">Carrinho vazio</div>';
 	} else {
 		modal.innerHTML = `
-			<h2>Carrinho</h2>
+			<h2>Seu Carrinho</h2>
 			<ul>
 				${carrinho.map((item, i) => `
 					<li>
@@ -76,6 +96,12 @@ function mostrarCarrinho() {
 				`).join('')}
 			</ul>
 			<div class="cart-total">Total: R$ ${carrinho.reduce((acc, item) => acc + item.preco * item.qtd, 0).toFixed(2)}</div>
+			<div class="payment-section">
+				<h3>Formas de Pagamento</h3>
+				<label><input type="radio" name="pagamento" value="cartao" checked> Cartão de Crédito</label><br>
+				<label><input type="radio" name="pagamento" value="pix"> Pix</label><br>
+				<label><input type="radio" name="pagamento" value="boleto"> Boleto</label>
+			</div>
 			<button id="finalizar-btn">Finalizar Pedido</button>
 			<button id="fechar-cart">Fechar</button>
 		`;
@@ -124,22 +150,8 @@ document.getElementById('cart-modal').onclick = function(e) {
 	if (e.target.dataset.rm !== undefined) removerItem(Number(e.target.dataset.rm));
 };
 
-// Adiciona evento aos botões de adicionar ao carrinho
-async function carregarProdutosComEventos() {
-	await carregarProdutos();
-	const lista = document.getElementById('product-list');
-	Array.from(lista.querySelectorAll('button')).forEach((btn, i) => {
-		btn.onclick = async () => {
-			// Busca produtos novamente para garantir dados atualizados
-			const res = await fetch(`${API_URL}/produtos`);
-			const produtos = await res.json();
-			const produto = produtos[i];
-			adicionarAoCarrinho(produto);
-		};
-	});
-}
-
+// Carrega carrinho e produtos ao iniciar
 window.addEventListener('DOMContentLoaded', () => {
 	carregarCarrinho();
-	carregarProdutosComEventos();
+	carregarProdutos();
 });

@@ -1,3 +1,21 @@
+/* Banner chamativo */
+.banner {
+  width: 100%;
+  background: linear-gradient(90deg, #0EA5E9 60%, #22C55E 100%);
+  color: #fff;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 500;
+  padding: 0.7rem 0;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(14,165,233,0.08);
+  animation: bannerPulse 2.5s infinite alternate;
+}
+@keyframes bannerPulse {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.15); }
+}
 body {
   font-family: 'Poppins', 'Inter', sans-serif;
   background: #fff;
@@ -40,18 +58,88 @@ header {
   gap: 2rem;
   padding: 2rem;
 }
+/* Card de produto estilo app de compras */
 .card {
-  background: #F9FAFB;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  padding: 1rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 1.2rem 1rem 1rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: box-shadow 0.3s, transform 0.2s, border 0.2s;
+  cursor: pointer;
+  border: 2px solid transparent;
+  position: relative;
 }
 .card img {
-  max-width: 100px;
+  max-width: 110px;
+  max-height: 110px;
   margin-bottom: 1rem;
+  border-radius: 10px;
+  background: #f3f4f6;
+  object-fit: contain;
+}
+.card .name {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
+.card .model {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+.card .desc {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+.card .price {
+  color: #0EA5E9;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+.card .stock {
+  color: #22C55E;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+.card button {
+  background: linear-gradient(90deg, #0EA5E9 60%, #22C55E 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.2rem;
+  box-shadow: 0 1px 4px rgba(14,165,233,0.08);
+  transition: background 0.2s, transform 0.1s;
+}
+.card button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.card:hover {
+  box-shadow: 0 6px 24px rgba(14,165,233,0.18);
+  transform: translateY(-6px) scale(1.03);
+  border: 2px solid #0EA5E9;
+}
+.card.added {
+  animation: bounceCard 0.6s;
+  border: 2px solid #22C55E;
+  box-shadow: 0 0 0 4px #22C55e33;
+}
+@keyframes bounceCard {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.08) rotate(-2deg); }
+  60% { transform: scale(0.97) rotate(2deg); }
+  100% { transform: scale(1); }
 }
 .card .name {
   font-weight: bold;
