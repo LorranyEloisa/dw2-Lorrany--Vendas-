@@ -1,3 +1,128 @@
+/* Banners extras */
+.banners-extra {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.banners-extra img {
+  max-width: 340px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  transition: transform 0.2s;
+}
+.banners-extra img:hover {
+  transform: scale(1.04) rotate(-1deg);
+}
+
+/* Barra de filtros */
+.filtros-bar {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  background: #f3f4f6;
+  padding: 0.7rem 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(14,165,233,0.07);
+}
+.filtros-bar label {
+  font-size: 1rem;
+  color: #222;
+}
+.filtros-bar select, .filtros-bar input {
+  margin-left: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  font-size: 1rem;
+}
+.filtros-bar button {
+  background: #0EA5E9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.1rem;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.filtros-bar button:hover {
+  background: #22C55E;
+}
+
+/* Carrinho visual melhorado */
+#cart-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(14,165,233,0.13);
+  padding: 1.2rem 1.5rem;
+  min-width: 320px;
+  max-width: 380px;
+  margin: 0 auto;
+  font-size: 1.05rem;
+}
+#cart-modal h2 {
+  margin-top: 0;
+  color: #0EA5E9;
+}
+#cart-modal ul {
+  list-style: none;
+  padding: 0;
+}
+#cart-modal li {
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#cart-modal button[data-rm] {
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.95rem;
+  margin-left: 0.7rem;
+  cursor: pointer;
+}
+#cart-modal .cart-total {
+  font-weight: bold;
+  color: #22C55E;
+  margin: 1rem 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+#cart-modal .payment-section {
+  margin: 1rem 0 0.7rem 0;
+  background: #f3f4f6;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+}
+#cart-modal #finalizar-btn {
+  background: #22C55E;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1.1rem;
+  margin-right: 0.7rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#cart-modal #finalizar-btn:hover {
+  background: #0EA5E9;
+}
+#cart-modal #fechar-cart {
+  background: #ccc;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
 /* Banner chamativo */
 .banner {
   width: 100%;

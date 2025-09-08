@@ -14,6 +14,27 @@
   <div class="banner">
     <span>Volta às aulas com ofertas imperdíveis! <b>Frete grátis</b> para compras acima de R$ 99!</span>
   </div>
+  <div class="banners-extra">
+    <img src="https://img.freepik.com/vetores-gratis/volta-as-aulas-banner-promocional_23-2148574952.jpg" alt="Banner Promo 1">
+    <img src="https://img.freepik.com/vetores-gratis/banner-promocional-de-material-escolar_23-2148574951.jpg" alt="Banner Promo 2">
+  </div>
+  <div class="filtros-bar">
+    <label>Categoria:
+      <select id="filtro-categoria">
+        <option value="">Todas</option>
+      </select>
+    </label>
+    <label>Ordenar:
+      <select id="filtro-ordenacao">
+        <option value="">Padrão</option>
+        <option value="preco_asc">Menor preço</option>
+        <option value="preco_desc">Maior preço</option>
+        <option value="nome">Nome (A-Z)</option>
+      </select>
+    </label>
+    <input id="filtro-busca" type="text" placeholder="Buscar produto..." />
+    <button id="btn-buscar">Buscar</button>
+  </div>
   <div class="container">
     <main id="product-list"></main>
     <aside id="cart-section">

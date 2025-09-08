@@ -1,33 +1,35 @@
 
 const API_URL = 'http://localhost:8000';
 
-// Renderiza lista de produtos
-async function carregarProdutos() {
-	const res = await fetch(`${API_URL}/produtos`);
+
+// Renderiza lista de produtos com filtros
+async function carregarProdutos(filtros = {}) {
+	let url = `${API_URL}/produtos?`;
+	if (filtros.search) url += `search=${encodeURIComponent(filtros.search)}&`;
+	if (filtros.categoria) url += `categoria=${encodeURIComponent(filtros.categoria)}&`;
+	if (filtros.sort) url += `sort=${encodeURIComponent(filtros.sort)}&`;
+	const res = await fetch(url);
 	const produtos = await res.json();
 	const lista = document.getElementById('product-list');
 	lista.innerHTML = '';
 	produtos.forEach((produto, i) => {
 		const card = document.createElement('div');
 		card.className = 'card';
-		   card.innerHTML = `
-			   <img src="${produto.imagem || 'https://via.placeholder.com/100x100?text=Sem+Imagem'}" alt="Imagem do produto">
-			   <div class="name">${produto.nome}</div>
-			   <div class="model">Modelo: <b>${produto.modelo || '-'}</b></div>
-			   <div class="desc">${produto.descricao || ''}</div>
-			   <div class="price">R$ ${produto.preco.toFixed(2)}</div>
-			   <div class="stock">${produto.estoque > 0 ? 'Em estoque' : 'Esgotado'}</div>
-			   <button ${produto.estoque === 0 ? 'disabled' : ''} aria-pressed="false" aria-label="Adicionar ao carrinho">Adicionar</button>
-		   `;
-		// Adiciona ao carrinho ao clicar no card ou botão
+		card.innerHTML = `
+			<img src="${produto.imagem || 'https://via.placeholder.com/100x100?text=Sem+Imagem'}" alt="Imagem do produto">
+			<div class="name">${produto.nome}</div>
+			<div class="model">Modelo: <b>${produto.modelo || '-'}</b></div>
+			<div class="desc">${produto.descricao || ''}</div>
+			<div class="price">R$ ${produto.preco.toFixed(2)}</div>
+			<div class="stock">${produto.estoque > 0 ? 'Em estoque' : 'Esgotado'}</div>
+			<button ${produto.estoque === 0 ? 'disabled' : ''} aria-pressed="false" aria-label="Adicionar ao carrinho">Adicionar</button>
+		`;
 		card.onclick = (e) => {
-			// Evita duplo clique se for no botão
 			if (e.target.tagName === 'BUTTON' || e.target === card) {
 				adicionarAoCarrinho(produto);
 				animarAdicao(card);
 			}
 		};
-		// Também adiciona ao carrinho ao clicar no botão
 		card.querySelector('button').onclick = (e) => {
 			e.stopPropagation();
 			adicionarAoCarrinho(produto);
@@ -35,6 +37,18 @@ async function carregarProdutos() {
 		};
 		lista.appendChild(card);
 	});
+
+	// Preencher categorias no filtro
+	const selectCat = document.getElementById('filtro-categoria');
+	if (selectCat && selectCat.options.length <= 1) {
+		const cats = [...new Set(produtos.map(p => p.categoria))];
+		cats.forEach(cat => {
+			const opt = document.createElement('option');
+			opt.value = cat;
+			opt.textContent = cat;
+			selectCat.appendChild(opt);
+		});
+	}
 }
 
 // Animação de feedback ao adicionar ao carrinho
@@ -43,7 +57,25 @@ function animarAdicao(card) {
 	setTimeout(() => card.classList.remove('added'), 600);
 }
 
-window.addEventListener('DOMContentLoaded', carregarProdutos);
+
+// Filtros e busca
+function aplicarFiltros() {
+	const categoria = document.getElementById('filtro-categoria')?.value || '';
+	const sort = document.getElementById('filtro-ordenacao')?.value || '';
+	const search = document.getElementById('filtro-busca')?.value || '';
+	carregarProdutos({ categoria, sort, search });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+	carregarCarrinho();
+	carregarProdutos();
+	document.getElementById('filtro-categoria')?.addEventListener('change', aplicarFiltros);
+	document.getElementById('filtro-ordenacao')?.addEventListener('change', aplicarFiltros);
+	document.getElementById('btn-buscar')?.addEventListener('click', aplicarFiltros);
+	document.getElementById('filtro-busca')?.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') aplicarFiltros();
+	});
+});
 
 // Carrinho de compras
 let carrinho = [];
