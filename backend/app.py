@@ -1,10 +1,82 @@
 
-from fastapi import FastAPI, HTTPException, Query, Depends
+from fastapi import FastAPI, HTTPException, Query, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from database import engine, Base, SessionLocal
-from models import Produto, Pedido
+from .database import engine, Base, SessionLocal
+from .models import Produto, Pedido
+from decimal import Decimal, ROUND_HALF_UP
+from sqlalchemy.exc import SQLAlchemyError
+from pydantic import BaseModel
+
+class CarrinhoItem(BaseModel):
+    produto_id: int
+    quantidade: int  # >=1
+
+class ConfirmarCarrinhoRequest(BaseModel):
+    items: list[CarrinhoItem]
+    coupon: str = None
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app = FastAPI()
+
+@app.post("/carrinho/confirmar")
+def confirmar_carrinho(req: ConfirmarCarrinhoRequest, db: Session = Depends(get_db)):
+    if not req.items:
+        raise HTTPException(status_code=400, detail="Carrinho vazio.")
+    produtos = db.query(Produto).filter(Produto.id.in_([item.produto_id for item in req.items])).all()
+    prod_map = {p.id: p for p in produtos}
+    total = Decimal('0.00')
+    for item in req.items:
+        if not isinstance(item.quantidade, int) or item.quantidade < 1:
+            raise HTTPException(status_code=400, detail=f"Quantidade inválida para produto id {item.produto_id}.")
+        prod = prod_map.get(item.produto_id)
+        if not prod:
+            raise HTTPException(status_code=400, detail=f"Produto id {item.produto_id} não encontrado.")
+        if prod.estoque < item.quantidade:
+            raise HTTPException(status_code=400, detail=f"Estoque insuficiente para '{prod.nome}'.")
+        total += Decimal(str(prod.preco)) * Decimal(item.quantidade)
+    total = total.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    discount = Decimal('0.00')
+    if req.coupon and req.coupon.upper() == 'ALUNO10':
+        discount = (total * Decimal('0.10')).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    total_final = (total - discount).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    # Reduz estoque
+    for item in req.items:
+        prod = prod_map[item.produto_id]
+        prod.estoque -= item.quantidade
+    # Cria pedido (opcional simplificado)
+    from datetime import datetime
+    pedido = Pedido(
+        data=datetime.now(),
+        total_final=float(total_final)
+    )
+    db.add(pedido)
+    try:
+        db.commit()
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Erro ao salvar pedido.")
+    return {
+        "order_id": pedido.id,
+        "total_before": float(total),
+        "discount": float(discount),
+        "total_final": float(total_final)
+    }
+
+
+from fastapi import FastAPI, HTTPException, Query, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
+from .database import engine, Base, SessionLocal
+from .models import Produto
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
@@ -25,17 +97,29 @@ Base.metadata.create_all(bind=engine)
 def health():
     return {"status": "ok"}
 
-class ProdutoSchema(BaseModel):
+# --- Pydantic Schemas ---
+class ProdutoBase(BaseModel):
     nome: str = Field(..., min_length=3, max_length=60)
     descricao: Optional[str] = None
     preco: float = Field(..., ge=0.01)
     estoque: int = Field(..., ge=0)
     categoria: str = Field(...)
     sku: Optional[str] = None
-    modelo: Optional[str] = None
 
-class ProdutoOut(ProdutoSchema):
+class ProdutoCreate(ProdutoBase):
+    pass
+
+class ProdutoUpdate(BaseModel):
+    nome: Optional[str] = Field(None, min_length=3, max_length=60)
+    descricao: Optional[str] = None
+    preco: Optional[float] = Field(None, ge=0.01)
+    estoque: Optional[int] = Field(None, ge=0)
+    categoria: Optional[str] = None
+    sku: Optional[str] = None
+
+class ProdutoRead(ProdutoBase):
     id: int
+    created_at: Optional[datetime]
     class Config:
         orm_mode = True
 
@@ -46,53 +130,80 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/produtos", response_model=List[ProdutoOut])
+# --- Endpoints REST Produto ---
+@app.get("/produtos", response_model=List[ProdutoRead])
 def listar_produtos(
     search: Optional[str] = Query(None),
     categoria: Optional[str] = Query(None),
     sort: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    limit: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    query = db.query(Produto)
-    if search:
-        query = query.filter(Produto.nome.ilike(f"%{search}%"))
-    if categoria:
-        query = query.filter(Produto.categoria == categoria)
-    if sort == "preco_asc":
-        query = query.order_by(Produto.preco.asc())
-    elif sort == "preco_desc":
-        query = query.order_by(Produto.preco.desc())
-    elif sort == "nome":
-        query = query.order_by(Produto.nome.asc())
-    return query.all()
+    try:
+        query = db.query(Produto)
+        if search:
+            query = query.filter(Produto.nome.ilike(f"%{search}%"))
+        if categoria:
+            query = query.filter(Produto.categoria == categoria)
+        if sort == "preco_asc":
+            query = query.order_by(Produto.preco.asc())
+        elif sort == "preco_desc":
+            query = query.order_by(Produto.preco.desc())
+        elif sort == "nome":
+            query = query.order_by(Produto.nome.asc())
+        produtos = query.offset((page-1)*limit).limit(limit).all()
+        return produtos
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar produtos: {str(e)}")
 
-@app.post("/produtos", response_model=ProdutoOut, status_code=201)
-def criar_produto(produto: ProdutoSchema, db: Session = Depends(get_db)):
-    db_prod = Produto(**produto.dict())
-    db.add(db_prod)
-    db.commit()
-    db.refresh(db_prod)
-    return db_prod
+@app.get("/produtos/{id}", response_model=ProdutoRead)
+def get_produto(id: int, db: Session = Depends(get_db)):
+    prod = db.query(Produto).filter(Produto.id == id).first()
+    if not prod:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    return prod
 
-@app.put("/produtos/{id}", response_model=ProdutoOut)
-def atualizar_produto(id: int, produto: ProdutoSchema, db: Session = Depends(get_db)):
+@app.post("/produtos", response_model=ProdutoRead, status_code=201)
+def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
+    try:
+        db_prod = Produto(**produto.dict())
+        db.add(db_prod)
+        db.commit()
+        db.refresh(db_prod)
+        return db_prod
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Erro ao criar produto: {str(e)}")
+
+@app.put("/produtos/{id}", response_model=ProdutoRead)
+def atualizar_produto(id: int, produto: ProdutoUpdate, db: Session = Depends(get_db)):
     db_prod = db.query(Produto).filter(Produto.id == id).first()
     if not db_prod:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
-    for key, value in produto.dict().items():
+    data = produto.dict(exclude_unset=True)
+    for key, value in data.items():
         setattr(db_prod, key, value)
-    db.commit()
-    db.refresh(db_prod)
-    return db_prod
+    try:
+        db.commit()
+        db.refresh(db_prod)
+        return db_prod
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Erro ao atualizar produto: {str(e)}")
 
 @app.delete("/produtos/{id}", status_code=204)
 def deletar_produto(id: int, db: Session = Depends(get_db)):
     db_prod = db.query(Produto).filter(Produto.id == id).first()
     if not db_prod:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
-    db.delete(db_prod)
-    db.commit()
-    return JSONResponse(status_code=204, content=None)
+    try:
+        db.delete(db_prod)
+        db.commit()
+        return JSONResponse(status_code=204, content=None)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Erro ao deletar produto: {str(e)}")
 
 class ItemCarrinho(BaseModel):
     id: int
@@ -139,8 +250,8 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from database import engine, Base, SessionLocal
-from models import Produto
+from .database import engine, Base, SessionLocal
+from .models import Produto
 from pydantic import BaseModel, Field
 from typing import Optional, List
 

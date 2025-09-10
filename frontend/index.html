@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,9 +8,34 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- A11y: aria-live para mensagens dinâmicas -->
+  <!-- A11y: aria-live para mensagens dinâmicas -->
+  <div id="toast" class="toast" hidden aria-live="polite" role="status" tabindex="0"></div>
+  <!-- Botão Admin -->
+  <!-- A11y: botão acessível para abrir modal de novo produto -->
+  <button id="admin-btn" class="admin-btn" aria-label="Abrir modal de novo produto" tabindex="0">Admin</button>
+  <!-- Modal Admin -->
+  <!-- A11y: modal com role dialog e foco gerenciado -->
+  <div id="admin-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+    <div class="modal-content">
+  <span id="admin-close" class="close" role="button" aria-label="Fechar modal" tabindex="0">&times;</span>
+  <h2 id="admin-modal-title">Admin - Produto</h2>
+      <form id="admin-form" autocomplete="off">
+  <label>Nome*<br><input type="text" id="admin-nome" maxlength="60" required aria-required="true" aria-label="Nome do produto" tabindex="0"></label><br>
+  <label>Descrição<br><textarea id="admin-desc" maxlength="200" aria-label="Descrição do produto" tabindex="0"></textarea></label><br>
+  <label>Preço*<br><input type="number" id="admin-preco" min="0.01" step="0.01" required aria-required="true" aria-label="Preço do produto" tabindex="0"></label><br>
+  <label>Estoque*<br><input type="number" id="admin-estoque" min="0" step="1" required aria-required="true" aria-label="Estoque do produto" tabindex="0"></label><br>
+  <label>Categoria*<br><input type="text" id="admin-categoria" maxlength="30" required aria-required="true" aria-label="Categoria do produto" tabindex="0"></label><br>
+  <label>SKU*<br><input type="text" id="admin-sku" maxlength="20" required aria-required="true" aria-label="SKU do produto" tabindex="0"></label><br>
+  <button type="submit" aria-label="Salvar produto" tabindex="0">Salvar</button>
+  <div id="admin-err" class="error" style="display:none" aria-live="polite" tabindex="0"></div>
+      </form>
+    </div>
+  </div>
   <header>
     <h1>Loja Escolar</h1>
-    <button id="cart-btn" aria-label="Abrir carrinho"><span id="cart-count">0</span> 🛒</button>
+  <!-- A11y: botão acessível para abrir carrinho -->
+  <button id="cart-btn" aria-label="Abrir carrinho" tabindex="0"><span id="cart-count">0</span> 🛒</button>
   </header>
   <div class="banner">
     <span>Volta às aulas com ofertas imperdíveis! <b>Frete grátis</b> para compras acima de R$ 99!</span>
@@ -18,25 +44,38 @@
     <img src="https://img.freepik.com/vetores-gratis/volta-as-aulas-banner-promocional_23-2148574952.jpg" alt="Banner Promo 1">
     <img src="https://img.freepik.com/vetores-gratis/banner-promocional-de-material-escolar_23-2148574951.jpg" alt="Banner Promo 2">
   </div>
-  <div class="filtros-bar">
+  <!-- A11y: região de filtros de produtos -->
+  <div class="filtros-bar" role="region" aria-label="Filtros de produtos">
     <label>Categoria:
-      <select id="filtro-categoria">
+  <select id="filtro-categoria" aria-label="Filtrar por categoria" tabindex="0">
         <option value="">Todas</option>
       </select>
     </label>
     <label>Ordenar:
-      <select id="filtro-ordenacao">
+  <select id="filtro-ordenacao" aria-label="Ordenar por filtro antigo" tabindex="0">
         <option value="">Padrão</option>
         <option value="preco_asc">Menor preço</option>
         <option value="preco_desc">Maior preço</option>
         <option value="nome">Nome (A-Z)</option>
       </select>
     </label>
-    <input id="filtro-busca" type="text" placeholder="Buscar produto..." />
-    <button id="btn-buscar">Buscar</button>
+  <input id="filtro-busca" type="text" placeholder="Buscar produto..." aria-label="Buscar produto" tabindex="0" />
+  <button id="btn-buscar" aria-label="Buscar" tabindex="0">Buscar</button>
   </div>
   <div class="container">
-    <main id="product-list"></main>
+  <!-- A11y: região de ordenação e paginação -->
+  <div class="sort-pagination-bar" role="region" aria-label="Controles de ordenação e paginação">
+      <label>Ordenar:
+    <select id="sort-select" aria-label="Ordenar produtos" tabindex="0">
+          <option value="nome_asc">Nome (A-Z)</option>
+          <option value="nome_desc">Nome (Z-A)</option>
+          <option value="preco_asc">Preço (menor)</option>
+          <option value="preco_desc">Preço (maior)</option>
+        </select>
+      </label>
+  <span id="pagination-controls" role="navigation" aria-label="Paginação"></span>
+    </div>
+  <main id="product-list" role="list" aria-label="Lista de produtos" tabindex="0"></main>
     <aside id="cart-section">
       <h2>Carrinho</h2>
       <div id="cart-modal"></div>

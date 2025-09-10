@@ -1,3 +1,129 @@
+/* A11y: foco visível */
+button:focus, input:focus, select:focus, textarea:focus, .close:focus {
+  outline: 2px solid #0EA5E9;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #0EA5E9aa;
+}
+/* A11y: foco visível */
+button:focus, input:focus, select:focus, textarea:focus, .close:focus {
+  outline: 2px solid #0EA5E9;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #0EA5E9aa;
+}
+/* Ordenação e Paginação */
+.sort-pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 18px 0 10px 0;
+  justify-content: space-between;
+}
+#sort-select {
+  font-size: 1rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+#pagination-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+#pagination-controls button {
+  background: #0EA5E9;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#pagination-controls button[disabled] {
+  background: #ccc;
+  color: #888;
+  cursor: default;
+}
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  background: #22C55E;
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 12px #0003;
+  z-index: 2000;
+  opacity: 0.98;
+  transition: opacity 0.3s;
+}
+.toast[hidden] { display: none; }
+/* Admin Modal */
+.admin-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #0EA5E9;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.3);
+}
+.modal[hidden] { display: none; }
+.modal-content {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 8px;
+  min-width: 320px;
+  box-shadow: 0 2px 16px #0002;
+  position: relative;
+}
+.modal-content h2 { margin-top: 0; }
+.modal-content label { display: block; margin: 10px 0 4px; }
+.modal-content input, .modal-content textarea {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.modal-content button[type=submit] {
+  background: #22C55E;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.modal-content .close {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+}
+.modal-content .error {
+  color: #EF4444;
+  margin-top: 8px;
+  font-size: 0.98rem;
+}
 /* Banners extras */
 .banners-extra {
   display: flex;
