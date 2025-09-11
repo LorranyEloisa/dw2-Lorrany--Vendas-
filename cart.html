@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho - Loja Escolar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Loja Escolar</h1>
+    <a href="index.html" class="voltar">&larr; Voltar às compras</a>
+  </header>
+  <main>
+    <div class="main-title">Carrinho de Compras</div>
+    <div id="cart-page-items"></div>
+    <div id="cart-page-total"></div>
+    <div class="pagamento-section">
+      <h3>Formas de Pagamento</h3>
+      <form id="pagamento-form">
+        <label><input type="radio" name="pagamento" value="pix" required> PIX</label><br>
+        <label><input type="radio" name="pagamento" value="credito"> Cartão de Crédito</label><br>
+        <label><input type="radio" name="pagamento" value="boleto"> Boleto Bancário</label><br>
+        <button type="submit">Finalizar Compra</button>
+      </form>
+      <div id="pagamento-msg" class="sucesso-msg" style="display:none;"></div>
+    </div>
+  </main>
+  <script src="cart.js"></script>
+</body>
+</html>

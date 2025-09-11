@@ -4,15 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loja Escolar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <h1>Loja Escolar</h1>
-    <button id="cart-btn" aria-label="Abrir carrinho"><span id="cart-count">0</span> 🛒</button>
+    <nav>
+      <a href="cart.html" class="cart-link">Carrinho</a>
+      <a href="login.html" class="logout-link" id="logout-link" style="margin-left:1rem;">Sair</a>
+    </nav>
+    <button id="cart-btn" aria-label="Abrir carrinho" tabindex="0"><span id="cart-count">0</span> 🛒</button>
   </header>
+  <div class="main-title">Bem-vindo à Loja Escolar! Confira nossos produtos:</div>
   <main id="product-list"></main>
-  <div id="cart-modal" hidden></div>
+  <div id="cart-modal" class="modal" hidden>
+    <div class="modal-content">
+      <button class="close-modal" aria-label="Fechar carrinho">&times;</button>
+      <h2>Carrinho de Compras</h2>
+      <div id="cart-items"></div>
+      <div id="cart-total"></div>
+      <button id="checkout-btn">Finalizar Compra</button>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="modal-backdrop" hidden></div>
   <script src="scripts.js"></script>
+  <script>
+    // Proteção de login
+    if (!localStorage.getItem('usuarioLogado')) {
+      window.location.href = 'login.html';
+    }
+    document.getElementById('logout-link').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('usuarioLogado');
+      window.location.href = 'login.html';
+    };
+  </script>
 </body>
 </html>
