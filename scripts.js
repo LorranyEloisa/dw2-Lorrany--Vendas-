@@ -2,111 +2,57 @@
 
 // Produtos mock de papelaria
 const produtos = [
-	{
-		id: 1,
-		nome: 'Caderno Universitário 96 folhas',
-		preco: 18.90,
-		estoque: 10,
-		imagem: 'https://images.pexels.com/photos/4145195/pexels-photo-4145195.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 2,
-		nome: 'Lápis Preto HB',
-		preco: 1.50,
-		estoque: 50,
-		imagem: 'https://images.pexels.com/photos/159711/pencils-crayons-colorful-colour-159711.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 3,
-		nome: 'Borracha Branca',
-		preco: 2.00,
-		estoque: 30,
-		imagem: 'https://images.pexels.com/photos/159778/pexels-photo-159778.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 4,
-		nome: 'Caneta Azul',
-		preco: 2.50,
-		estoque: 40,
-		imagem: 'https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 5,
-		nome: 'Mochila Escolar',
-		preco: 89.90,
-		estoque: 8,
-		imagem: 'https://images.pexels.com/photos/1027130/pexels-photo-1027130.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 6,
-		nome: 'Estojo Simples',
-		preco: 14.90,
-		estoque: 15,
-		imagem: 'https://images.pexels.com/photos/159776/pexels-photo-159776.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 7,
-		nome: 'Régua 30cm',
-		preco: 3.50,
-		estoque: 25,
-		imagem: 'https://images.pexels.com/photos/209679/pexels-photo-209679.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 8,
-		nome: 'Apontador Duplo',
-		preco: 2.80,
-		estoque: 20,
-		imagem: 'https://images.pexels.com/photos/159777/pexels-photo-159777.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 9,
-		nome: 'Cola Branca 90g',
-		preco: 4.50,
-		estoque: 18,
-		imagem: 'https://images.pexels.com/photos/159775/pexels-photo-159775.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 10,
-		nome: 'Tesoura Escolar',
-		preco: 6.90,
-		estoque: 22,
-		imagem: 'https://images.pexels.com/photos/159774/pexels-photo-159774.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 11,
-		nome: 'Pasta Plástica com Elástico',
-		preco: 5.90,
-		estoque: 17,
-		imagem: 'https://images.pexels.com/photos/159779/pexels-photo-159779.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 12,
-		nome: 'Marca Texto Amarelo',
-		preco: 3.90,
-		estoque: 30,
-		imagem: 'https://images.pexels.com/photos/51342/pexels-photo-51342.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 13,
-		nome: 'Compasso Escolar',
-		preco: 7.90,
-		estoque: 10,
-		imagem: 'https://images.pexels.com/photos/159780/pexels-photo-159780.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 14,
-		nome: 'Bloco de Notas Adesivas',
-		preco: 4.20,
-		estoque: 25,
-		imagem: 'https://images.pexels.com/photos/159781/pexels-photo-159781.jpeg?auto=compress&w=400&h=400&fit=crop'
-	},
-	{
-		id: 15,
-		nome: 'Corretivo Líquido',
-		preco: 5.50,
-		estoque: 12,
-		imagem: 'https://images.pexels.com/photos/159782/pexels-photo-159782.jpeg?auto=compress&w=400&h=400&fit=crop'
-	}
+  {
+    id: 1,
+    nome: "Lápis",
+    preco: 2.50,
+    estoque: 100,
+    imagem: "https://images.tcdn.com.br/img/img_prod/1315861/lapis_desenho_6b_madeira_kz3623_788_1_f1fd3aba1ad7b25a6ef4966f6573c9c8.jpg"
+  },
+  
+{
+  id: 2,
+  nome: "Caderno",
+  preco: 15.00,
+  estoque: 50,
+  imagem: "https://images.tcdn.com.br/img/img_prod/977007/caderno_universitario_1_materia_96_folhas_azul_2031_1_20201204155354.jpg"
+  },
+  {
+    id: 3,
+    nome: "Borracha",
+    preco: 3.00,
+    estoque: 80,
+    imagem: "https://fotos.oceanob2b.com/High/043190.jpg"
+  },
+  {
+    id: 4,
+    nome: "Régua",
+    preco: 4.50,
+    estoque: 60,
+    imagem: "https://bazarhorizonte.vtexassets.com/arquivos/ids/391124/009857_000000_2.jpg?v=637904800487470000"
+  },
+  {
+    id: 5,
+    nome: "Mochila",
+    preco: 75.00,
+    estoque: 30,
+    imagem: "https://images.tcdn.com.br/img/img_prod/1243909/mochila_escolar_de_costas_packn_go_309_1_08cdda36e1b156311c3007d685154d5f.jpg"
+  },
+  {
+    id: 6,
+    nome: "Apontador",
+    preco: 2.00,
+    estoque: 70,
+    imagem: "https://www.faber-castell.com.br/-/media/Products/Product-Repository/Miscellaneous-sharpeners/24-24-21-Sharpener/588513-Sharpener-Classical-Mix/Images/588513_10_PM1.ashx?bc=ffffff&as=0&h=900&w=900&sc_lang=pt-BR&hash=1FFFE16169A011D231B18A8D7B25992F"
+  },
+  {
+    id: 7,
+    nome: "Cola",
+    preco: 5.00,
+    estoque: 40,
+    imagem: "https://www.tilibra.com.br/storage/products/md/cola-branca-120g-lavavel_345563-e1.jpg?c=88f51d10807abf8d5f0097c252673442"
+  }
+  
 ];
 
 let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
